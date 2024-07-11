@@ -23,3 +23,22 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: bold
+      fonts:
+        - asset: assets/fonts/bold.ttf
+    - family: semibold
+      fonts:
+        - asset: assets/fonts/semibold.ttf
+    - family: medium
+      fonts:
+        - asset: assets/fonts/medium.ttf
+    - family: regular
+      fonts:
+        - asset: assets/fonts/regular.ttf
+    - family: light
+      fonts:
+        - asset: assets/fonts/light.ttf
