@@ -18,6 +18,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  firebase_core: ^3.2.0
 
 dev_dependencies:
   flutter_test:
