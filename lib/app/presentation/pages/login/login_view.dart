@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/login/bloc/login_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
-import 'package:flutter_crud_firebase/app/presentation/styles/theme.dart';
 import 'package:flutter_crud_firebase/app/router/app_route_config.dart';
+import 'package:flutter_crud_firebase/env.dart';
 import 'package:formz/formz.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -30,6 +31,22 @@ class _LoginFormViewState extends State<LoginFormView> {
   final _passwordFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        context.read<LoginBloc>().add(LoginEmailUnfocused());
+      }
+    });
+
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        context.read<LoginBloc>().add(LoginPasswordUnfocused());
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
@@ -50,7 +67,31 @@ class _LoginFormViewState extends State<LoginFormView> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Login'),
+            title: Text(AppLocalizations.of(context)!.loginTitle),
+            actions: <Widget>[
+              PopupMenuButton(
+                onSelected: (value) {},
+                icon: Icon(
+                  Icons.translate,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                itemBuilder: (context) => Languages.languages
+                    .map((e) => PopupMenuItem<String>(
+                          value: e.code.toString(),
+                          onTap: () {
+                            context.read<AppLocalizationBloc>().add(
+                                ChangeAppLocalizationEvent(
+                                    defaultLanguage: e.code));
+                          },
+                          child: Text(
+                            e.value.toString(),
+                            style: const TextStyle(
+                                fontSize: 14, fontFamily: 'bold'),
+                          ),
+                        ))
+                    .toList(),
+              )
+            ],
           ),
           body: AbsorbPointer(
             absorbing: false,

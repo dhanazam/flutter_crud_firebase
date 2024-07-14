@@ -6,6 +6,7 @@ import 'package:flutter_crud_firebase/app/router/app_route_config.dart';
 import 'package:flutter_crud_firebase/env.dart';
 import 'package:flutter_crud_firebase/firebase_options.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,10 @@ class MainApp extends StatelessWidget {
             title: Environments.appName,
             initialRoute: AppRouter.initialRoute,
             onGenerateRoute: AppRouter.onGenerateRouted,
-            localizationsDelegates: const [AppLocalizations.delegate],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+            ],
             supportedLocales: Environments.supportedLanguages,
             locale: Locale(currentLanguage),
             debugShowCheckedModeBanner: false,
