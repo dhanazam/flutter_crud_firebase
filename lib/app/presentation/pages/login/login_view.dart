@@ -59,7 +59,6 @@ class _LoginFormViewState extends State<LoginFormView> {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isFailure) {
-          debugPrint('from view ${state.toastMessage.toString()}');
           kSnackBarError(context, state.toastMessage.toString());
         } else if (state.status.isSuccess) {
           Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
@@ -72,7 +71,7 @@ class _LoginFormViewState extends State<LoginFormView> {
               automaticallyImplyLeading: false,
               leading: IconButton(
                 onPressed: () {
-                  // context.read<ThemeBloc>().add(ChangeThemeEvent());
+                  context.read<ThemeBloc>().add(ChangeThemeEvent());
                 },
                 icon: Icon(
                   Icons.light_mode,
