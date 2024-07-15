@@ -59,6 +59,7 @@ class _LoginFormViewState extends State<LoginFormView> {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isFailure) {
+          debugPrint('from view ${state.toastMessage.toString()}');
           kSnackBarError(context, state.toastMessage.toString());
         } else if (state.status.isSuccess) {
           Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
@@ -66,105 +67,201 @@ class _LoginFormViewState extends State<LoginFormView> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.loginTitle),
-            actions: <Widget>[
-              PopupMenuButton(
-                onSelected: (value) {},
+            appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.loginTitle),
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                onPressed: () {
+                  // context.read<ThemeBloc>().add(ChangeThemeEvent());
+                },
                 icon: Icon(
-                  Icons.translate,
+                  Icons.light_mode,
                   color: Theme.of(context).iconTheme.color,
                 ),
-                itemBuilder: (context) => Languages.languages
-                    .map((e) => PopupMenuItem<String>(
-                          value: e.code.toString(),
-                          onTap: () {
-                            context.read<AppLocalizationBloc>().add(
-                                ChangeAppLocalizationEvent(
-                                    defaultLanguage: e.code));
-                          },
-                          child: Text(
-                            e.value.toString(),
-                            style: const TextStyle(
-                                fontSize: 14, fontFamily: 'bold'),
+              ),
+              actions: <Widget>[
+                PopupMenuButton(
+                  onSelected: (value) {},
+                  icon: Icon(Icons.translate,
+                      color: Theme.of(context).iconTheme.color),
+                  itemBuilder: (context) => Languages.languages
+                      .map((e) => PopupMenuItem<String>(
+                            value: e.code.toString(),
+                            onTap: () {
+                              context.read<AppLocalizationBloc>().add(
+                                  ChangeAppLocalizationEvent(
+                                      defaultLanguage: e.code));
+                            },
+                            child: Text(
+                              e.value.toString(),
+                              style: const TextStyle(
+                                  fontSize: 14, fontFamily: 'bold'),
+                            ),
+                          ))
+                      .toList(),
+                )
+              ],
+            ),
+            body: AbsorbPointer(
+              absorbing: state.status.isInProgress ? true : false,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(ThemeProvider.scaffoldPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        initialValue: state.email.value,
+                        focusNode: _emailFocusNode,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.email,
+                          errorText: state.email.displayError != null
+                              ? AppLocalizations.of(context)!.emailValidation
+                              : null,
+                          labelStyle: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.fontSize,
+                            fontFamily: 'medium',
                           ),
-                        ))
-                    .toList(),
-              )
-            ],
-          ),
-          body: AbsorbPointer(
-            absorbing: false,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(ThemeProvider.scaffoldPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      initialValue: '',
-                      focusNode: _emailFocusNode,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        errorText: 'Email is required',
-                        labelStyle: TextStyle(
+                          errorStyle: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.fontSize,
+                            fontFamily: 'medium',
+                          ),
+                        ),
+                        style: TextStyle(
                           fontSize:
-                              Theme.of(context).textTheme.labelMedium?.fontSize,
+                              Theme.of(context).textTheme.labelLarge?.fontSize,
                           fontFamily: 'medium',
                         ),
-                        errorStyle: TextStyle(
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) {
+                          context
+                              .read<LoginBloc>()
+                              .add(LoginEmailChanged(email: value));
+                        },
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        initialValue: state.password.value,
+                        focusNode: _passwordFocusNode,
+                        decoration: InputDecoration(
+                          helperMaxLines: 2,
+                          labelText: AppLocalizations.of(context)!.password,
+                          errorMaxLines: 2,
+                          errorText: state.password.displayError != null
+                              ? AppLocalizations.of(context)!.passwordValidation
+                              : null,
+                          labelStyle: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.fontSize,
+                            fontFamily: 'medium',
+                          ),
+                          errorStyle: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.fontSize,
+                            fontFamily: 'medium',
+                          ),
+                        ),
+                        style: TextStyle(
                           fontSize:
-                              Theme.of(context).textTheme.labelMedium?.fontSize,
+                              Theme.of(context).textTheme.labelLarge?.fontSize,
                           fontFamily: 'medium',
                         ),
+                        obscureText: true,
+                        onChanged: (value) {
+                          context
+                              .read<LoginBloc>()
+                              .add(LoginPasswordChanged(password: value));
+                        },
+                        textInputAction: TextInputAction.done,
                       ),
-                      style: TextStyle(
-                        fontSize:
-                            Theme.of(context).textTheme.labelLarge?.fontSize,
-                        fontFamily: 'medium',
+                      const SizedBox(
+                        height: 20,
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      initialValue: '',
-                      focusNode: _passwordFocusNode,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        errorText: 'Password is required',
-                        labelStyle: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.labelMedium?.fontSize,
-                          fontFamily: 'medium',
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: isValid
+                              ? () => context
+                                  .read<LoginBloc>()
+                                  .add(LoginFormSubmitted())
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(40),
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            textStyle: TextStyle(
+                                fontFamily: 'semibold',
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize),
+                          ),
+                          label: Text(AppLocalizations.of(context)!.signin),
+                          icon: state.status.isInProgress
+                              ? Container(
+                                  width: 24,
+                                  height: 24,
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                              : const Icon(Icons.login_outlined),
                         ),
-                        errorStyle: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.labelMedium?.fontSize,
-                          fontFamily: 'medium',
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Navigator.of(context)
+                            //     .pushNamed(AppRouter.registerRoute);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            elevation: 5,
+                            backgroundColor: kTransparent,
+                            foregroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            shadowColor: kTransparent.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.signup,
+                            style: TextStyle(
+                                fontFamily: 'semibold',
+                                color: Theme.of(context).primaryColor,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize),
+                          ),
                         ),
                       ),
-                      style: TextStyle(
-                        fontSize:
-                            Theme.of(context).textTheme.labelLarge?.fontSize,
-                        fontFamily: 'medium',
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      textInputAction: TextInputAction.done,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
+            ));
       },
     );
   }
