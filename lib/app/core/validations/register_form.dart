@@ -37,3 +37,37 @@ class RegisterEmailField
         : RegisterEmailFieldValidationError.invalid;
   }
 }
+
+class RegisterPasswordField
+    extends FormzInput<String, RegisterPasswordFieldValidationError> {
+  const RegisterPasswordField.pure([super.value = '']) : super.pure();
+  const RegisterPasswordField.dirty([super.value = '']) : super.dirty();
+
+  @override
+  RegisterPasswordFieldValidationError? validator(String value) {
+    if (value.isEmpty) return RegisterPasswordFieldValidationError.empty;
+    return null;
+  }
+}
+
+class RegisterConfirmedPasswordField
+    extends FormzInput<String, RegisterConfirmPasswordFieldValidationError> {
+  final String password;
+
+  const RegisterConfirmedPasswordField.pure({this.password = ''})
+      : super.pure('');
+
+  const RegisterConfirmedPasswordField.dirty(
+      {required this.password, String value = ''})
+      : super.dirty(value);
+
+  @override
+  RegisterConfirmPasswordFieldValidationError? validator(String value) {
+    if (value.isEmpty) {
+      return RegisterConfirmPasswordFieldValidationError.empty;
+    }
+    return password == value
+        ? null
+        : RegisterConfirmPasswordFieldValidationError.mismatch;
+  }
+}
