@@ -231,8 +231,8 @@ class _LoginFormViewState extends State<LoginFormView> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigator.of(context)
-                            //     .pushNamed(AppRouter.registerRoute);
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.registerRoute);
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 5,
