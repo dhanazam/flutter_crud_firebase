@@ -17,8 +17,11 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _onSplashInitialEvent(
       SplashInitialEvent event, Emitter<SplashState> emit) async {
     final connectivityResult = await Connectivity().checkConnectivity();
+    // ignore: unrelated_type_equality_checks
     final hasInternet = (connectivityResult == ConnectivityResult.mobile ||
+        // ignore: unrelated_type_equality_checks
         connectivityResult == ConnectivityResult.wifi);
+    debugPrint('Has Internet: $hasInternet');
     emit(state.copyWith(status: SplashStatus.loading));
     UserModel user = await _authRepository.retrieveCurrentUser().first;
     if (user.uid != "uid") {
@@ -29,12 +32,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
     if (!hasInternet) {
       debugPrint('No Internet Connection');
-      emit(
-        state.copyWith(
-          status: SplashStatus.failure,
-          toastMessage: 'No Internet Connection',
-        ),
-      );
+      emit(state.copyWith(
+        status: SplashStatus.failure,
+        toastMessage: 'No Internet Connection',
+      ));
     }
   }
 }

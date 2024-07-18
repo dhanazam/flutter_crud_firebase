@@ -23,13 +23,13 @@ class SplashView extends StatelessWidget {
     final GlobalKey<ScaffoldState> globalKey = GlobalKey();
     return BlocConsumer<SplashBloc, SplashState>(
       listener: (context, state) {
-        Navigator.of(context).pushReplacementNamed(
-          AppRouter.errorRoute,
-          arguments: [
+        if (state.status.isFailure) {
+          Navigator.of(context)
+              .pushReplacementNamed(AppRouter.errorRoute, arguments: [
             '500',
             state.toastMessage,
-          ],
-        );
+          ]);
+        }
         if (state.status.isAuthorized) {
           Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
         }
