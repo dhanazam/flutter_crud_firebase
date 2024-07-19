@@ -17,11 +17,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _onSplashInitialEvent(
       SplashInitialEvent event, Emitter<SplashState> emit) async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    // ignore: unrelated_type_equality_checks
-    final hasInternet = (connectivityResult == ConnectivityResult.mobile ||
-        // ignore: unrelated_type_equality_checks
-        connectivityResult == ConnectivityResult.wifi);
-    debugPrint('Has Internet: $hasInternet');
+    final hasInternet = connectivityResult.contains(ConnectivityResult.wifi);
+
     emit(state.copyWith(status: SplashStatus.loading));
     UserModel user = await _authRepository.retrieveCurrentUser().first;
     if (user.uid != "uid") {
