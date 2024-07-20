@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_crud_firebase/app/core/core.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/pages.dart';
 
 class AppRouter {
@@ -6,6 +7,7 @@ class AppRouter {
   static const String loginRoute = '/login';
   static const String registerRoute = '/register';
   static const String homeRoute = '/home';
+  static const String addNewPostRoute = '/add_new_post';
   static const String errorRoute = '/error';
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
@@ -34,6 +36,14 @@ class AppRouter {
             return const HomeScreen();
           },
         );
+      case addNewPostRoute:
+        List<dynamic> args = routeSettings.arguments as List<dynamic>;
+        return MaterialPageRoute(builder: (context) {
+          return NewPostScreen(
+            action: args[0].toString(),
+            postModel: PostModel(),
+          );
+        });
       case errorRoute:
         final List<dynamic> args = routeSettings.arguments as List<dynamic>;
         return MaterialPageRoute(
@@ -44,13 +54,11 @@ class AppRouter {
         );
       default:
         return MaterialPageRoute(
-          builder: (context) {
-            return const Scaffold(
-              body: Center(
-                child: Text('Page not found'),
-              ),
-            );
-          },
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text('No route defined for ${routeSettings.name}'),
+            ),
+          ),
         );
     }
   }
