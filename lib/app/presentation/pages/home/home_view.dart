@@ -6,7 +6,7 @@ import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_crud_firebase/app/router/router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -85,8 +85,8 @@ class HomeView extends StatelessWidget {
         },
         builder: (context, state) {
           if (state.status.isLoading) {
-            return SkeletonListView(
-              itemCount: 10,
+            return Skeletonizer(
+              child: Text(AppLocalizations.of(context)!.noPostMessage),
             );
           }
           if (state.status.isSuccess) {
