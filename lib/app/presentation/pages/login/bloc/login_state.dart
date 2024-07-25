@@ -1,6 +1,6 @@
 part of 'login_bloc.dart';
 
-final class LoginState {
+final class LoginState extends Equatable {
   final LoginEmailField email;
   final LoginPasswordField password;
   final bool isValid;
@@ -30,6 +30,9 @@ final class LoginState {
       toastMessage: toastMessage ?? this.toastMessage,
     );
   }
+  
+  @override
+  List<Object?> get props => [email, password, isValid, status, toastMessage];
 }
 
 final class LoginInitial extends LoginState {}

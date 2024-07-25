@@ -20,7 +20,7 @@ extension AddPostStatusX on AddPostStatus {
   bool get isUploadedImage => this == AddPostStatus.uploadedImage;
 }
 
-final class NewPostState {
+final class NewPostState extends Equatable {
   final AddPostStatus status;
   final PostCover cover;
   final PostTitleField title;
@@ -54,4 +54,7 @@ final class NewPostState {
       toastMessage: toastMessage ?? this.toastMessage,
     );
   }
+  
+  @override
+  List<Object?> get props => [status, cover, title, description, isValid, toastMessage];
 }

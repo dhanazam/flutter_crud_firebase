@@ -1,6 +1,6 @@
 part of 'register_bloc.dart';
 
-final class RegisterState {
+final class RegisterState extends Equatable {
   final RegisterEmailField email;
   final RegisterPasswordField password;
   final RegisterConfirmedPasswordField confirmedPassword;
@@ -38,6 +38,9 @@ final class RegisterState {
       toastMessage: toastMessage ?? this.toastMessage,
     );
   }
+  
+  @override
+  List<Object?> get props => [email, password, confirmedPassword, name, isValid, status, toastMessage];
 }
 
 final class RegisterInitial extends RegisterState {}

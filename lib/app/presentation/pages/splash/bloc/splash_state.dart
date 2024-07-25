@@ -14,7 +14,7 @@ extension SplashStatusX on SplashStatus {
   bool get isFailure => this == SplashStatus.failure;
 }
 
-final class SplashState {
+final class SplashState extends Equatable {
   final SplashStatus status;
   final String toastMessage;
 
@@ -32,4 +32,7 @@ final class SplashState {
       toastMessage: toastMessage ?? this.toastMessage,
     );
   }
+  
+  @override
+  List<Object?> get props => [status, toastMessage];
 }

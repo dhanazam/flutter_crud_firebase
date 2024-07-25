@@ -10,7 +10,7 @@ extension HomeStatusX on HomeStatus {
   bool get isSuccess => this == HomeStatus.success;
 }
 
-final class HomeState {
+final class HomeState extends Equatable{
   final HomeStatus status;
   final String toastMessage;
   final List<PostModel> list;
@@ -32,4 +32,7 @@ final class HomeState {
       list: list ?? this.list,
     );
   }
+  
+  @override
+  List<Object?> get props => [status, toastMessage, list];
 }
