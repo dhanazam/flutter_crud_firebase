@@ -6,6 +6,7 @@ import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io' as io;
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:post_repository/post_repository.dart';
 
 
 part 'new_post_event.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/pages.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:post_repository/post_repository.dart';
 
 class AppRouter {
   static const String initialRoute = '/';

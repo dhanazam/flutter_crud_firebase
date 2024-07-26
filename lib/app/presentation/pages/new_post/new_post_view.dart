@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/new_post/new_post.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:post_repository/post_repository.dart';
 
 class NewPostScreen extends StatefulWidget {
   final String action;
