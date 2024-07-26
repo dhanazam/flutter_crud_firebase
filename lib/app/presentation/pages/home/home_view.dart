@@ -60,7 +60,6 @@ class HomeView extends StatelessWidget {
                       postModel: Post(),
                     )),
           ).then((res) {
-            debugPrint(res.toString());
             if (res == true) {
               context.read<HomeBloc>().add(HomeInitialEvent());
             }
@@ -73,7 +72,6 @@ class HomeView extends StatelessWidget {
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
           if (state.status == HomeStatus.unAuthorized) {
-            debugPrint('logout');
             kSnackBarError(context, state.toastMessage);
             Navigator.of(context).pushNamedAndRemoveUntil(
                 AppRouter.loginRoute, (route) => false);
@@ -143,8 +141,6 @@ class HomeView extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      debugPrint(
-                                          'Edit this item ${state.list[index].id}');
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -154,7 +150,6 @@ class HomeView extends StatelessWidget {
                                           ),
                                         ),
                                       ).then((res) {
-                                        debugPrint(res.toString());
                                         if (res == true) {
                                           context.read<HomeBloc>().add(
                                                 HomeInitialEvent(),
@@ -293,8 +288,6 @@ class HomeView extends StatelessWidget {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            debugPrint(
-                                                                'Delete this item ${state.list[index].id}');
                                                             context
                                                                 .read<
                                                                     HomeBloc>()
