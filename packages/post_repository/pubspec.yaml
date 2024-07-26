@@ -1,0 +1,12 @@
+name: post_repository
+description: A repository for managing post domain.
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  equatable: ^2.0.5
+  cloud_firestore: ^5.0.2
+  shared_pref: 
+    path: ../shared_pref
