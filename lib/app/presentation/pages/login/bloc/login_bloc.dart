@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter_crud_firebase/app/core/core.dart';
 import 'package:formz/formz.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -79,17 +80,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isValid &&
         state.email.value.isNotEmpty &&
         state.password.value.isNotEmpty) {
-      UserModel user = UserModel(
+      User user = User(
         email: state.email.value.toString(),
         password: state.password.value.toString(),
       );
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        UserCredential? authUser = await _authRepository.signIn(user);
+        firebase_auth.UserCredential? authUser = await _authRepository.signIn(user);
         await _authRepository.saveUID(authUser!.user!.uid);
 
         emit(state.copyWith(status: FormzSubmissionStatus.success));
-      } on FirebaseAuthException catch (e) {
+      } on firebase_auth.FirebaseAuthException catch (e) {
         emit(state.copyWith(
           status: FormzSubmissionStatus.failure,
           toastMessage: e.message.toString(),

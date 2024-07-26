@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_crud_firebase/app/core/core.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';
@@ -21,7 +21,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     final hasInternet = connectivityResult.contains(ConnectivityResult.wifi);
 
     emit(state.copyWith(status: SplashStatus.loading));
-    UserModel user = await _authRepository.retrieveCurrentUser().first;
+    User user = await _authRepository.retrieveCurrentUser().first;
     if (user.uid != "uid") {
       emit(state.copyWith(status: SplashStatus.authorized));
     } else {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_crud_firebase/app/core/models/models.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_crud_firebase/app/core/repositories/repositories.dart';
 
 part 'home_event.dart';

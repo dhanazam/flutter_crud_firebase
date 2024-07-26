@@ -5,6 +5,8 @@ import 'package:flutter_crud_firebase/app/core/core.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io' as io;
+import 'package:authentication_repository/authentication_repository.dart';
+
 
 part 'new_post_event.dart';
 part 'new_post_state.dart';
@@ -149,7 +151,7 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
       ),
     );
     if (state.isValid) {
-      UserModel user = await _authRepository.retrieveCurrentUser().first;
+      User user = await _authRepository.retrieveCurrentUser().first;
       if (user.uid != "uid") {
         if (event.action == 'create') {
           var param = {
