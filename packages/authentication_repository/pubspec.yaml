@@ -1,0 +1,12 @@
+name: authentication_repository
+description: A repository for managing user authentication domain.
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dev_dependencies:
+  firebase_auth: ^4.14.1
+  shared_pref: 
+    path: ../shared_pref
+  equatable: ^2.0.5
