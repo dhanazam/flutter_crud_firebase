@@ -32,6 +32,8 @@ dependencies:
     path: packages/post_repository
   shared_pref:
     path: packages/shared_pref
+  validations:
+    path: packages/validations
 
 dev_dependencies:
   flutter_test:
