@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crud_firebase/app/core/core.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/pages.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 class AppRouter {
   static const String initialRoute = '/';
@@ -41,7 +41,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) {
           return NewPostScreen(
             action: args[0].toString(),
-            postModel: PostModel(),
+            postModel: Post(),
           );
         });
       case errorRoute:

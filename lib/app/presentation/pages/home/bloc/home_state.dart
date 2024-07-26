@@ -13,7 +13,7 @@ extension HomeStatusX on HomeStatus {
 final class HomeState extends Equatable{
   final HomeStatus status;
   final String toastMessage;
-  final List<PostModel> list;
+  final List<Post> list;
 
   const HomeState({
     this.status = HomeStatus.loading,
@@ -24,7 +24,7 @@ final class HomeState extends Equatable{
   HomeState copyWith({
     HomeStatus? status,
     String? toastMessage,
-    List<PostModel>? list,
+    List<Post>? list,
   }) {
     return HomeState(
       status: status ?? this.status,

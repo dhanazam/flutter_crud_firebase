@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_crud_firebase/app/core/core.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/pages.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_crud_firebase/app/router/router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -57,7 +57,7 @@ class HomeView extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => NewPostScreen(
                       action: 'create',
-                      postModel: PostModel(),
+                      postModel: Post(),
                     )),
           ).then((res) {
             debugPrint(res.toString());

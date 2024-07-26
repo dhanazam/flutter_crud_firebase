@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_crud_firebase/app/core/models/models.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_crud_firebase/app/core/repositories/repositories.dart';
 
@@ -12,7 +11,7 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AuthRepository _authRepository = AuthRepository();
   final PostRepository _postRepository = PostRepository();
-  List<PostModel> list = <PostModel>[];
+  List<Post> list = <Post>[];
 
   HomeBloc() : super(const HomeState()) {
     on<HomeInitialEvent>(_onHomeInitialEvent);

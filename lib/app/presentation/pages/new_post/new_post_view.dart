@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_crud_firebase/app/core/models/models.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/new_post/new_post.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 class NewPostScreen extends StatefulWidget {
   final String action;
-  final PostModel postModel;
+  final Post postModel;
 
   const NewPostScreen(
       {super.key, required this.action, required this.postModel});
@@ -32,7 +32,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
 class NewPostView extends StatefulWidget {
   final String action;
-  final PostModel postModel;
+  final Post postModel;
   const NewPostView({super.key, required this.action, required this.postModel});
 
   @override
