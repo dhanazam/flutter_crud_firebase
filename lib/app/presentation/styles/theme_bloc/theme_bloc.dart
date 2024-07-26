@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_crud_firebase/app/services/services.dart';
+import 'package:shared_pref/shared_pref.dart';
 
 part 'theme_event.dart';
 part 'theme_state.dart';

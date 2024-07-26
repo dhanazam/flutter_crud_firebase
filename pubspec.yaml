@@ -30,6 +30,8 @@ dependencies:
     path: packages/authentication_repository
   post_repository:
     path: packages/post_repository
+  shared_pref:
+    path: packages/shared_pref
 
 dev_dependencies:
   flutter_test:

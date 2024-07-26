@@ -572,7 +572,7 @@ packages:
     source: hosted
     version: "6.1.2"
   shared_pref:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "packages/shared_pref"
       relative: true

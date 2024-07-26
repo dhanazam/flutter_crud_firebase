@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_crud_firebase/app/services/services.dart';
+import 'package:shared_pref/shared_pref.dart';
 import 'package:flutter_crud_firebase/env.dart';
 
 part 'app_localization_event.dart';
