@@ -8,6 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:post_repository/post_repository.dart';
 
+typedef ContextCallback = void Function(BuildContext context);
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -22,6 +24,10 @@ class HomeScreen extends StatelessWidget {
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
+
+  void goBackNavigation(BuildContext context) {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,95 +200,23 @@ class HomeView extends StatelessWidget {
                                             content: SingleChildScrollView(
                                               child: Column(
                                                 children: [
-                                                  Image.asset(
-                                                    'assets/images/delete.png',
-                                                    fit: BoxFit.cover,
-                                                    height: 80,
-                                                    width: 80,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .confirm,
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          Theme.of(context)
-                                                              .textTheme
-                                                              .titleLarge
-                                                              ?.fontSize,
-                                                      fontFamily: 'semibold',
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    '${AppLocalizations.of(context)!.toDelete} ${state.list[index].title!} ${AppLocalizations.of(context)!.confirmPost}',
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          Theme.of(context)
-                                                              .textTheme
-                                                              .titleMedium
-                                                              ?.fontSize,
-                                                      fontFamily: 'medium',
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 20,
-                                                  ),
+                                                  const _DeleteImage(),
+                                                  const SizedBox(height: 20),
+                                                  _ConfirmText(
+                                                      context: context),
+                                                  const SizedBox(height: 10),
+                                                  _DeleteTextInfo(
+                                                      context: context,
+                                                      state: state,
+                                                      index: index),
+                                                  const SizedBox(height: 20),
                                                   Row(
                                                     children: [
-                                                      Expanded(
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            foregroundColor: Theme
-                                                                    .of(context)
-                                                                .scaffoldBackgroundColor,
-                                                            backgroundColor:
-                                                                Theme.of(
-                                                                        context)
-                                                                    .canvasColor,
-                                                            minimumSize:
-                                                                const Size
-                                                                    .fromHeight(
-                                                                    35),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                          ),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .cancel,
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .scaffoldBackgroundColor,
-                                                                fontSize: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodyMedium
-                                                                    ?.fontSize,
-                                                                fontFamily:
-                                                                    'medium'),
-                                                          ),
-                                                        ),
+                                                      _CancelButton(
+                                                        onPressed:
+                                                            goBackNavigation,
                                                       ),
-                                                      const SizedBox(
-                                                        width: 20,
-                                                      ),
+                                                      const SizedBox(width: 20),
                                                       Expanded(
                                                         child: ElevatedButton(
                                                           onPressed: () {
@@ -363,6 +297,88 @@ class HomeView extends StatelessWidget {
           }
           return const SizedBox();
         },
+      ),
+    );
+  }
+}
+
+class _DeleteImage extends StatelessWidget {
+  const _DeleteImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/images/delete.png',
+      fit: BoxFit.cover,
+      height: 80,
+      width: 80,
+    );
+  }
+}
+
+class _ConfirmText extends StatelessWidget {
+  const _ConfirmText({required this.context});
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      AppLocalizations.of(context)!.confirm,
+      style: TextStyle(
+        fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+        fontFamily: 'semibold',
+      ),
+    );
+  }
+}
+
+class _DeleteTextInfo extends StatelessWidget {
+  const _DeleteTextInfo(
+      {required this.context, required this.state, required this.index});
+  final BuildContext context;
+  final HomeState state;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final String textInfo =
+        '${AppLocalizations.of(context)!.toDelete} ${state.list[index].title!} ${AppLocalizations.of(context)!.confirmPost}';
+    return Text(
+      textInfo,
+      style: TextStyle(
+          fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+          fontFamily: 'medium'),
+    );
+  }
+}
+
+class _CancelButton extends StatelessWidget {
+  const _CancelButton({required this.onPressed});
+
+  final ContextCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Theme.of(context).canvasColor,
+          minimumSize: const Size.fromHeight(35),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.cancel,
+          style: TextStyle(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+              fontFamily: 'medium'),
+        ),
       ),
     );
   }
