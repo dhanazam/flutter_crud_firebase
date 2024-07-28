@@ -9,6 +9,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:post_repository/post_repository.dart';
 
 typedef ContextCallback = void Function(BuildContext context);
+typedef ContextStateIndexCallback = void Function(
+    BuildContext context, HomeState state, int index);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,6 +29,16 @@ class HomeView extends StatelessWidget {
 
   void goBackNavigation(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void confirmDeleteOnPressed(
+      BuildContext context, HomeState state, int index) {
+    Navigator.pop(context);
+    context.read<HomeBloc>().add(
+          HomeDeletePostEvent(
+            postModel: state.list[index],
+          ),
+        );
   }
 
   @override
@@ -213,64 +225,17 @@ class HomeView extends StatelessWidget {
                                                   Row(
                                                     children: [
                                                       _CancelButton(
+                                                        context: context,
                                                         onPressed:
                                                             goBackNavigation,
                                                       ),
                                                       const SizedBox(width: 20),
-                                                      Expanded(
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            context
-                                                                .read<
-                                                                    HomeBloc>()
-                                                                .add(
-                                                                  HomeDeletePostEvent(
-                                                                    postModel:
-                                                                        state.list[
-                                                                            index],
-                                                                  ),
-                                                                );
-                                                          },
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            foregroundColor: Theme
-                                                                    .of(context)
-                                                                .scaffoldBackgroundColor,
-                                                            backgroundColor:
-                                                                Theme.of(
-                                                                        context)
-                                                                    .primaryColor,
-                                                            minimumSize:
-                                                                const Size
-                                                                    .fromHeight(
-                                                                    35),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                          ),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .delete,
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .scaffoldBackgroundColor,
-                                                                fontSize: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodyMedium
-                                                                    ?.fontSize,
-                                                                fontFamily:
-                                                                    'medium'),
-                                                          ),
-                                                        ),
+                                                      _ConfirmDeleteButton(
+                                                        onPressed:
+                                                            confirmDeleteOnPressed,
+                                                        context: context,
+                                                        state: state,
+                                                        index: index,
                                                       ),
                                                     ],
                                                   )
@@ -353,17 +318,16 @@ class _DeleteTextInfo extends StatelessWidget {
 }
 
 class _CancelButton extends StatelessWidget {
-  const _CancelButton({required this.onPressed});
+  const _CancelButton({required this.context, required this.onPressed});
 
+  final BuildContext context;
   final ContextCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: () => onPressed(context),
         style: ElevatedButton.styleFrom(
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           backgroundColor: Theme.of(context).canvasColor,
@@ -374,6 +338,43 @@ class _CancelButton extends StatelessWidget {
         ),
         child: Text(
           AppLocalizations.of(context)!.cancel,
+          style: TextStyle(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+              fontFamily: 'medium'),
+        ),
+      ),
+    );
+  }
+}
+
+class _ConfirmDeleteButton extends StatelessWidget {
+  const _ConfirmDeleteButton(
+      {required this.onPressed,
+      required this.context,
+      required this.state,
+      required this.index});
+
+  final BuildContext context;
+  final HomeState state;
+  final int index;
+  final ContextStateIndexCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () => onPressed(context, state, index),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Theme.of(context).primaryColor,
+          minimumSize: const Size.fromHeight(35),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.delete,
           style: TextStyle(
               color: Theme.of(context).scaffoldBackgroundColor,
               fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
