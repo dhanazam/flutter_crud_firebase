@@ -256,6 +256,37 @@ class _LoginFormViewState extends State<LoginFormView> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.read<LoginBloc>().add(LoginWithGoogle());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            elevation: 5,
+                            backgroundColor: kTransparent,
+                            foregroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            shadowColor: kTransparent.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            "Sign in with Google",
+                            style: TextStyle(
+                                fontFamily: 'semibold',
+                                color: Theme.of(context).primaryColor,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

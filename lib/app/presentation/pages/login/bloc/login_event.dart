@@ -19,3 +19,5 @@ final class LoginPasswordChanged extends LoginEvent {
 final class LoginPasswordUnfocused extends LoginEvent {}
 
 final class LoginFormSubmitted extends LoginEvent {}
+
+final class LoginWithGoogle extends LoginEvent {}

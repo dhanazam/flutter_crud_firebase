@@ -16,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEmailUnfocused>(_onLoginEmailUnfocused);
     on<LoginPasswordUnfocused>(_onLoginPasswordUnfocused);
     on<LoginFormSubmitted>(_onLoginFormSubmitted);
+    on<LoginWithGoogle>(_onLoginWithGoogle);
   }
 
   void _onLoginEmailChanged(LoginEmailChanged event, Emitter<LoginState> emit) {
@@ -86,7 +87,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        firebase_auth.UserCredential? authUser = await _authRepository.signIn(user);
+        firebase_auth.UserCredential? authUser =
+            await _authRepository.signIn(user);
         await _authRepository.saveUID(authUser!.user!.uid);
 
         emit(state.copyWith(status: FormzSubmissionStatus.success));
@@ -96,6 +98,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           toastMessage: e.message.toString(),
         ));
       }
+    }
+  }
+
+  Future<void> _onLoginWithGoogle(
+      LoginWithGoogle event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    try {
+      await _authRepository.signInWithGoogle();
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      emit(state.copyWith(
+        status: FormzSubmissionStatus.failure,
+        toastMessage: e.message.toString(),
+      ));
     }
   }
 }
