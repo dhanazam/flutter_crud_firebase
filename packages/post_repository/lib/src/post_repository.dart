@@ -8,11 +8,11 @@ class PostRepository {
   final SharedPreferencesManager _sharedPreferencesManager =
       SharedPreferencesManager();
 
-  Future<void> addPost(dynamic postModel) async {
+  Future<void> addPost(Map<String, Object?> postModel) async {
     await _db.collection("posts").add(postModel);
   }
 
-  Future<void> updatePost(String id, dynamic postModel) async {
+  Future<void> updatePost(String id, Map<String, Object?> postModel) async {
     await _db.collection("posts").doc(id).update(postModel);
   }
 
