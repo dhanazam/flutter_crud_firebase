@@ -129,6 +129,9 @@ class HomeView extends StatelessWidget {
                                     ?.fontSize,
                                 fontFamily: 'medium',
                                 color: Theme.of(context).canvasColor,
+                                decoration: state.list[index].isCompleted!
+                                    ? TextDecoration.lineThrough
+                                    : null,
                               ),
                               title: Text('${state.list[index].title}'),
                               leading: ClipRRect(

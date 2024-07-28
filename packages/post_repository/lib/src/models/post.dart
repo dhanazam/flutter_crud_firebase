@@ -7,6 +7,7 @@ class Post extends Equatable {
   String? title;
   String? description;
   String? cover;
+  bool? isCompleted;
   int? status;
   Timestamp? timestamp;
 
@@ -16,6 +17,7 @@ class Post extends Equatable {
     this.title,
     this.description,
     this.cover,
+    this.isCompleted,
     this.status,
     this.timestamp,
   });
@@ -26,6 +28,7 @@ class Post extends Equatable {
       'title': title,
       'description': description,
       'cover': cover,
+      'isCompleted': isCompleted,
       'status': status,
       'timestamp': timestamp,
     };
@@ -37,6 +40,7 @@ class Post extends Equatable {
         title = doc.data()!['title'],
         description = doc.data()!['description'],
         cover = doc.data()!['cover'],
+        isCompleted = doc.data()!['isCompleted'],
         status = doc.data()!['status'],
         timestamp = doc.data()!['timestamp'];
 
@@ -46,6 +50,7 @@ class Post extends Equatable {
     String? title,
     String? description,
     String? cover,
+    bool? isCompleted,
     int? status,
     Timestamp? timestamp,
   }) {
@@ -55,11 +60,13 @@ class Post extends Equatable {
       title: title ?? this.title,
       description: description ?? this.description,
       cover: cover ?? this.cover,
+      isCompleted: isCompleted ?? this.isCompleted,
       status: status ?? this.status,
       timestamp: timestamp ?? this.timestamp,
     );
   }
-  
+
   @override
-  List<Object?> get props => [id, userId, title, description, cover, status, timestamp];
+  List<Object?> get props =>
+      [id, userId, title, description, isCompleted, cover, status, timestamp];
 }
