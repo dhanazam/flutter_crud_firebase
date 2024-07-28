@@ -9,6 +9,7 @@ class AppRouter {
   static const String homeRoute = '/home';
   static const String addNewPostRoute = '/add_new_post';
   static const String errorRoute = '/error';
+  static const String bottomTabRoute = '/bottom_tab';
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -28,6 +29,12 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) {
             return const RegisterScreen();
+          },
+        );
+      case bottomTabRoute:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const BottomTabView();
           },
         );
       case homeRoute:

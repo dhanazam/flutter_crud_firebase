@@ -31,7 +31,7 @@ class SplashView extends StatelessWidget {
           ]);
         }
         if (state.status.isAuthorized) {
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+          Navigator.of(context).pushReplacementNamed(AppRouter.bottomTabRoute);
         }
         if (state.status.isUnAuthorized) {
           Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
