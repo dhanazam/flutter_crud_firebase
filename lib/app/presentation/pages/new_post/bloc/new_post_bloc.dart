@@ -8,7 +8,6 @@ import 'dart:io' as io;
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:post_repository/post_repository.dart';
 
-
 part 'new_post_event.dart';
 part 'new_post_state.dart';
 
@@ -26,6 +25,8 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
     on<PostTitleUnfocused>(_onTitleUnfocused);
 
     on<PostDescriptionChanged>(_onDescriptionChanged);
+
+    on<PostCompletionToggle>(_onPostCompletionToggle);
 
     on<PostDescriptionUnfocused>(_onDescriptionUnfocused);
 
@@ -121,6 +122,11 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
     );
   }
 
+  Future<void> _onPostCompletionToggle(
+      PostCompletionToggle event, Emitter<NewPostState> emit) async {
+    emit(state.copyWith(isCompleted: event.isCompleted));
+  }
+
   Future<void> _onDescriptionUnfocused(
       PostDescriptionUnfocused event, Emitter<NewPostState> emit) async {
     final description = PostDescriptionField.dirty(state.description.value);
@@ -159,6 +165,7 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
             "cover": state.cover.value.toString(),
             "title": state.title.value.toString(),
             "description": state.description.value.toString(),
+            "isCompleted": state.isCompleted,
             "userId": user.uid,
             "timestamp": DateTime.timestamp(),
             "status": 1
@@ -174,6 +181,7 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
             "cover": state.cover.value.toString(),
             "title": state.title.value.toString(),
             "description": state.description.value.toString(),
+            "isCompleted": state.isCompleted,
             "userId": user.uid,
           };
           await _postRepository.updatePost(event.postModel.id!, param);

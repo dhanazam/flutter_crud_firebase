@@ -25,6 +25,7 @@ final class NewPostState extends Equatable {
   final PostCover cover;
   final PostTitleField title;
   final PostDescriptionField description;
+  final bool isCompleted;
   final bool isValid;
   final String toastMessage;
 
@@ -33,6 +34,7 @@ final class NewPostState extends Equatable {
     this.cover = const PostCover.pure(),
     this.title = const PostTitleField.pure(),
     this.description = const PostDescriptionField.pure(),
+    this.isCompleted = false,
     this.isValid = false,
     this.toastMessage = '',
   });
@@ -42,6 +44,7 @@ final class NewPostState extends Equatable {
     PostCover? cover,
     PostTitleField? title,
     PostDescriptionField? description,
+    bool? isCompleted,
     bool? isValid,
     String? toastMessage,
   }) {
@@ -50,11 +53,13 @@ final class NewPostState extends Equatable {
       cover: cover ?? this.cover,
       title: title ?? this.title,
       description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
       isValid: isValid ?? this.isValid,
       toastMessage: toastMessage ?? this.toastMessage,
     );
   }
-  
+
   @override
-  List<Object?> get props => [status, cover, title, description, isValid, toastMessage];
+  List<Object?> get props =>
+      [status, cover, title, description, isCompleted, isValid, toastMessage];
 }

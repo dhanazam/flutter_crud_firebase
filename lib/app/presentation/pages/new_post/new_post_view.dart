@@ -312,6 +312,17 @@ class _NewPostViewState extends State<NewPostView> {
                     const SizedBox(
                       height: 10,
                     ),
+                    SwitchListTile(
+                        title: const Text('Complete'),
+                        value: state.isCompleted,
+                        onChanged: (value) {
+                          context
+                              .read<NewPostBloc>()
+                              .add(PostCompletionToggle(isCompleted: value));
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     ElevatedButton.icon(
                       onPressed: () =>
                           context.read<NewPostBloc>().add(PostFormSubmitted(

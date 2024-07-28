@@ -29,6 +29,12 @@ final class PostDescriptionChanged extends NewPostEvent {
   PostDescriptionChanged({required this.description});
 }
 
+final class PostCompletionToggle extends NewPostEvent {
+  PostCompletionToggle({required this.isCompleted});
+
+  final bool isCompleted;
+}
+
 final class PostDescriptionUnfocused extends NewPostEvent {}
 
 final class PostFormSubmitted extends NewPostEvent {
