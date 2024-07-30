@@ -105,7 +105,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginWithGoogle event, Emitter<LoginState> emit) async {
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-      await _authRepository.signInWithGoogle();
+      firebase_auth.UserCredential? authUser =
+          await _authRepository.signInWithGoogle();
+      await _authRepository.saveUID(authUser!.user!.uid);
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(state.copyWith(

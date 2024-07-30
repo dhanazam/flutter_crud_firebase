@@ -42,7 +42,7 @@ class AuthRepository {
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<firebase_auth.UserCredential?> signInWithGoogle() async {
     try {
       late final firebase_auth.AuthCredential credential;
 
@@ -55,7 +55,7 @@ class AuthRepository {
         idToken: googleAuth?.idToken,
       );
 
-      await _auth.signInWithCredential(credential);
+      return await _auth.signInWithCredential(credential);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw firebase_auth.FirebaseAuthException(code: e.code, message: e.code);
     }
