@@ -5,15 +5,17 @@ import 'package:flutter_crud_firebase/app/core/observer.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_crud_firebase/app/router/app_route_config.dart';
 import 'package:flutter_crud_firebase/env.dart';
-import 'package:flutter_crud_firebase/firebase_options.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
   );
+
   Bloc.observer = const AppBlocObserver();
   runApp(const MyApp());
 }
@@ -21,7 +23,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '403560543340',
     projectId: 'flutter-crud-11564',
     storageBucket: 'flutter-crud-11564.appspot.com',
+    androidClientId: '403560543340-r48210odcbo7fht2tgkroa07k007d69l.apps.googleusercontent.com',
+    iosClientId: '403560543340-437g6i6v6mpb2vsrdi2fhhhkn8m0jamu.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterCrudFirebase',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '403560543340',
     projectId: 'flutter-crud-11564',
     storageBucket: 'flutter-crud-11564.appspot.com',
+    androidClientId: '403560543340-r48210odcbo7fht2tgkroa07k007d69l.apps.googleusercontent.com',
+    iosClientId: '403560543340-437g6i6v6mpb2vsrdi2fhhhkn8m0jamu.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterCrudFirebase',
   );
 
@@ -85,4 +89,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'flutter-crud-11564.appspot.com',
     measurementId: 'G-0G7NZD2RR2',
   );
+
 }
