@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_crud_firebase/app/bloc/app_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/pages.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
-import 'package:flutter_crud_firebase/app/router/router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:post_repository/post_repository.dart';
 
@@ -28,12 +29,12 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   void goBackNavigation(BuildContext context) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   void confirmDeleteOnPressed(
       BuildContext context, HomeState state, int index) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     context.read<HomeBloc>().add(
           HomeDeletePostEvent(
             postModel: state.list[index],
@@ -50,7 +51,7 @@ class HomeView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.read<HomeBloc>().add(HomeLogoutEvent());
+              context.read<AppBloc>().add(const AppLogoutRequested());
             },
             icon: Icon(
               Icons.logout_outlined,
@@ -70,18 +71,7 @@ class HomeView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NewPostScreen(
-                      action: 'create',
-                      postModel: Post(),
-                    )),
-          ).then((res) {
-            if (res == true) {
-              context.read<HomeBloc>().add(HomeInitialEvent());
-            }
-          });
+          context.go('/home/add-new-post');
         },
         child: const Icon(
           Icons.add,
@@ -91,12 +81,12 @@ class HomeView extends StatelessWidget {
         listener: (context, state) {
           if (state.status == HomeStatus.unAuthorized) {
             kSnackBarError(context, state.toastMessage);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRouter.loginRoute, (route) => false);
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //     AppRouter.loginRoute, (route) => false);
           } else if (state.status == HomeStatus.logout) {
             kSnackBarSuccess(context, state.toastMessage);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRouter.loginRoute, (route) => false);
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //     AppRouter.loginRoute, (route) => false);
           }
         },
         builder: (context, state) {
@@ -162,21 +152,23 @@ class HomeView extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => NewPostScreen(
-                                            action: 'update',
-                                            postModel: state.list[index],
-                                          ),
-                                        ),
-                                      ).then((res) {
-                                        if (res == true) {
-                                          context.read<HomeBloc>().add(
-                                                HomeInitialEvent(),
-                                              );
-                                        }
-                                      });
+                                      context
+                                          .go('/post/${state.list[index].id}');
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => NewPostScreen(
+                                      //       action: 'update',
+                                      //       postModel: state.list[index],
+                                      //     ),
+                                      //   ),
+                                      //   ).then((res) {
+                                      //     if (res == true) {
+                                      //       context.read<HomeBloc>().add(
+                                      //             HomeInitialEvent(),
+                                      //           );
+                                      //     }
+                                      //   });
                                     },
                                     icon: Icon(
                                       Icons.mode_edit_outline_outlined,

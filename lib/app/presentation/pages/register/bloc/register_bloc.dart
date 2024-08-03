@@ -9,7 +9,7 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  final AuthRepository _authRepository = AuthRepository();
+  final AuthenticationRepository _authRepository = AuthenticationRepository();
   RegisterBloc() : super(RegisterInitial()) {
     on<RegisterEmailChanged>(_onRegisterEmailChanged);
     on<RegisterPasswordChanged>(_onRegisterPasswordChanged);
@@ -192,9 +192,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        firebase_auth.UserCredential? authUser = await _authRepository.signUp(user);
+        await _authRepository.signUp(user);
 
-        await _authRepository.saveUID(authUser!.user!.uid);
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } on firebase_auth.FirebaseAuthException catch (e) {
         emit(state.copyWith(

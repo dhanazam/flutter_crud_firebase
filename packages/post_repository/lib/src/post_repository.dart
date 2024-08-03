@@ -29,6 +29,6 @@ class PostRepository {
   }
 
   Future<String?> getUserId() {
-    return _sharedPreferencesManager.getString('user_id');
+    return _sharedPreferencesManager.getString("user_uid");
   }
 }

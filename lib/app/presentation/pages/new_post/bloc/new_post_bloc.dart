@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:validations/form_inputs.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,7 +14,7 @@ part 'new_post_state.dart';
 
 class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final AuthRepository _authRepository = AuthRepository();
+  final AuthenticationRepository _authRepository = AuthenticationRepository();
   final PostRepository _postRepository = PostRepository();
   NewPostBloc() : super(const NewPostState()) {
     on<NewPostInitialEvent>(_onNewPostInitialEvent);
@@ -54,6 +55,7 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
   Future<void> _onPostImagePickerEvent(
       OnPostImagePickerEvent event, Emitter<NewPostState> emit) async {
     try {
+      debugPrint("_onPostImagePickerEvent event: $event");
       final pickedFile = await ImagePicker().pickImage(
           source: event.kind == 'gallery'
               ? ImageSource.gallery
@@ -65,9 +67,17 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
         Reference ref = _storage.ref().child('images/').child(pickedFile.name);
 
         uploadTask = ref.putFile(io.File(pickedFile.path));
+        uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+          debugPrint('Task state: ${snapshot.state}');
+          debugPrint(
+              'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
+        });
+
         await uploadTask.whenComplete(() async {
           await ref.getDownloadURL().then((value) {
+            debugPrint("_onPostImagePickerEvent value: $value");
             final cover = PostCover.dirty(value);
+            debugPrint("_onPostImagePickerEvent cover: $cover");
             emit(
               state.copyWith(
                 cover: cover.isValid ? cover : PostCover.pure(value),
@@ -79,8 +89,9 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
         });
       }
     } catch (e) {
-      emit(state.copyWith(
-          status: AddPostStatus.failure, toastMessage: e.toString()));
+      debugPrint("_onPostImagePickerEvent error: $e");
+      // emit(state.copyWith(
+      //     status: AddPostStatus.failure, toastMessage: e.toString()));
     }
   }
 

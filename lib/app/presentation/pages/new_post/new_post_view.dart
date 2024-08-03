@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/new_post/new_post.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewPostScreen extends StatefulWidget {
   final String action;
@@ -49,13 +49,6 @@ class _NewPostViewState extends State<NewPostView> {
 
   @override
   void initState() {
-    context.read<NewPostBloc>().add(
-          NewPostInitialEvent(
-            action: widget.action,
-            postModel: widget.postModel,
-          ),
-        );
-
     _titleFocusNode.addListener(() {
       if (!_titleFocusNode.hasFocus) {
         context.read<NewPostBloc>().add(PostTitleUnfocused());
@@ -85,26 +78,48 @@ class _NewPostViewState extends State<NewPostView> {
     super.dispose();
   }
 
+  void _showImagePickerModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Gallery'),
+                onTap: () {
+                  context
+                      .read<NewPostBloc>()
+                      .add(OnPostImagePickerEvent(kind: 'gallery'));
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () {
+                  context
+                      .read<NewPostBloc>()
+                      .add(OnPostImagePickerEvent(kind: 'camera'));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<NewPostBloc, NewPostState>(
-      listener: (context, state) {
-        if (state.status.isFailure) {
-          kSnackBarError(context, state.toastMessage);
-        } else if (state.status.isSuccess) {
-          kSnackBarSuccess(context, state.toastMessage);
-          Navigator.of(context).pop(true);
-        }
-      },
+    return BlocBuilder<NewPostBloc, NewPostState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: widget.action == 'create'
-                ? Text(AppLocalizations.of(context)!.newPostTitle)
-                : Text(AppLocalizations.of(context)!.updatePostTitle),
-          ),
+          appBar: AppBar(title: const Text('Post')),
           body: AbsorbPointer(
-            absorbing: state.status.isSubmitting ? true : false,
+            absorbing: state.status.isSubmitting,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(ThemeProvider.scaffoldPadding),
@@ -112,7 +127,6 @@ class _NewPostViewState extends State<NewPostView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -121,61 +135,7 @@ class _NewPostViewState extends State<NewPostView> {
                             SizedBox(
                               child: GestureDetector(
                                 onTap: () {
-                                  showCupertinoModalPopup<void>(
-                                      context: context,
-                                      builder: (_) => BlocProvider(
-                                            create: (_) => NewPostBloc(),
-                                            child: CupertinoActionSheet(
-                                              title: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .chooseFrom),
-                                              actions: <CupertinoActionSheetAction>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .gallery),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    context
-                                                        .read<NewPostBloc>()
-                                                        .add(
-                                                            OnPostImagePickerEvent(
-                                                                kind:
-                                                                    'gallery'));
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .camera),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    context
-                                                        .read<NewPostBloc>()
-                                                        .add(
-                                                            OnPostImagePickerEvent(
-                                                                kind:
-                                                                    'camera'));
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .cancel,
-                                                    style: const TextStyle(
-                                                        fontFamily: 'bold',
-                                                        color: Colors.red),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ));
+                                  _showImagePickerModal(context);
                                 },
                                 child: CircleAvatar(
                                   radius: 50,

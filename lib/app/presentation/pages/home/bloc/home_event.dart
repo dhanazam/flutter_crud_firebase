@@ -2,8 +2,6 @@ part of 'home_bloc.dart';
 
 sealed class HomeEvent {}
 
-class HomeLogoutEvent extends HomeEvent {}
-
 class HomeInitialEvent extends HomeEvent {}
 
 final class HomeUpdateStatusPostEvent extends HomeEvent {

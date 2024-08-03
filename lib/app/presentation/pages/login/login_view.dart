@@ -6,6 +6,7 @@ import 'package:flutter_crud_firebase/app/router/app_route_config.dart';
 import 'package:flutter_crud_firebase/env.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -61,7 +62,8 @@ class _LoginFormViewState extends State<LoginFormView> {
         if (state.status.isFailure) {
           kSnackBarError(context, state.toastMessage.toString());
         } else if (state.status.isSuccess) {
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+          context.go(homePath);
+          // Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
         }
       },
       builder: (context, state) {
@@ -231,8 +233,7 @@ class _LoginFormViewState extends State<LoginFormView> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(AppRouter.registerRoute);
+                            context.go(registerPath);
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 5,

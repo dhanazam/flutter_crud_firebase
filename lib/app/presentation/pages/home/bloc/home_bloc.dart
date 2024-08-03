@@ -9,26 +9,14 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final AuthRepository _authRepository = AuthRepository();
+  final AuthenticationRepository _authRepository = AuthenticationRepository();
   final PostRepository _postRepository = PostRepository();
   List<Post> list = <Post>[];
 
   HomeBloc() : super(const HomeState()) {
     on<HomeInitialEvent>(_onHomeInitialEvent);
-    on<HomeLogoutEvent>(_onHomeLogoutEvent);
     on<HomeUpdateStatusPostEvent>(_onHomeUpdateStatusPostEvent);
     on<HomeDeletePostEvent>(_onHomeDeletePostEvent);
-  }
-
-  Future<void> _onHomeLogoutEvent(
-      HomeLogoutEvent event, Emitter<HomeState> emit) async {
-    await _authRepository.signOut();
-    emit(
-      state.copyWith(
-        status: HomeStatus.logout,
-        toastMessage: 'Logged Out',
-      ),
-    );
   }
 
   FutureOr<void> _onHomeInitialEvent(

@@ -67,8 +67,8 @@ class _ErrorScreenState extends State<ErrorScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(AppRouter.initialRoute);
+                // Navigator.of(context)
+                //     .pushReplacementNamed(AppRouter.initialRoute);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,

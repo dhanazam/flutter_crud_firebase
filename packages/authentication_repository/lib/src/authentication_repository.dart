@@ -1,9 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_pref/shared_pref.dart';
 
-class AuthRepository {
+class AuthenticationRepository {
   firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.standard();
   final SharedPreferencesManager _sharedPreferencesManager =
@@ -11,12 +12,24 @@ class AuthRepository {
 
   Stream<User> retrieveCurrentUser() {
     return _auth.authStateChanges().map((firebase_auth.User? user) {
+      debugPrint("user: $user");
       if (user != null) {
+        _sharedPreferencesManager.putString("user_uid", user.uid);
         return User(uid: user.uid, email: user.email);
       } else {
-        return User(uid: "uid");
+        return User.empty;
       }
     });
+  }
+
+  User get currentUser {
+    final firebase_auth.User? user = _auth.currentUser;
+    if (user != null) {
+      _sharedPreferencesManager.putString("user_uid", user.uid);
+      return User(uid: user.uid, email: user.email);
+    } else {
+      return User.empty;
+    }
   }
 
   Future<firebase_auth.UserCredential?> signUp(User user) async {
@@ -62,15 +75,6 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
-    await _sharedPreferencesManager.clearKey('user_id');
     return await firebase_auth.FirebaseAuth.instance.signOut();
-  }
-
-  Future<void> saveUID(String uid) async {
-    _sharedPreferencesManager.putString('user_id', uid);
-  }
-
-  Future<String?> getUserId() async {
-    return await _sharedPreferencesManager.getString('user_id');
   }
 }

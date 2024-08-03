@@ -9,7 +9,7 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final AuthRepository _authRepository = AuthRepository();
+  final AuthenticationRepository _authRepository = AuthenticationRepository();
   LoginBloc() : super(LoginInitial()) {
     on<LoginEmailChanged>(_onLoginEmailChanged);
     on<LoginPasswordChanged>(_onLoginPasswordChanged);
@@ -87,9 +87,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        firebase_auth.UserCredential? authUser =
-            await _authRepository.signIn(user);
-        await _authRepository.saveUID(authUser!.user!.uid);
+        await _authRepository.signIn(user);
 
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } on firebase_auth.FirebaseAuthException catch (e) {
@@ -105,9 +103,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginWithGoogle event, Emitter<LoginState> emit) async {
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-      firebase_auth.UserCredential? authUser =
-          await _authRepository.signInWithGoogle();
-      await _authRepository.saveUID(authUser!.user!.uid);
+      await _authRepository.signInWithGoogle();
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(state.copyWith(

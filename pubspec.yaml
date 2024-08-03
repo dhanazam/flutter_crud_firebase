@@ -35,6 +35,7 @@ dependencies:
   validations:
     path: packages/validations
   firebase_app_check: ^0.3.0+3
+  go_router: ^13.2.0
 
 dev_dependencies:
   flutter_test:

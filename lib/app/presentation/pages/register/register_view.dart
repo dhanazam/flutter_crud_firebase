@@ -76,9 +76,9 @@ class _RegisterFormViewState extends State<RegisterFormView> {
         if (state.status.isFailure) {
           kSnackBarError(context, state.toastMessage.toString());
         } else if (state.status.isSuccess) {
-          kSnackBarSuccess(
-              context, AppLocalizations.of(context)!.accountDeleted);
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+          // kSnackBarSuccess(
+          //     context, AppLocalizations.of(context)!.accountDeleted);
+          // Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
         }
       },
       builder: (context, state) {
