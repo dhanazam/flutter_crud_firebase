@@ -118,11 +118,10 @@ abstract class AppRouter {
     redirect: (context, state) async {
       final status = context.read<AppBloc>().state.status;
       if (status == AppStatus.authenticated) {
-        return homePath;
+        return null;
       } else if (status == AppStatus.unauthenticated) {
         return loginPath;
       }
-      return null;
     },
   );
 }

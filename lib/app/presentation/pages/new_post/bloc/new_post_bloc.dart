@@ -75,9 +75,7 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
 
         await uploadTask.whenComplete(() async {
           await ref.getDownloadURL().then((value) {
-            debugPrint("_onPostImagePickerEvent value: $value");
             final cover = PostCover.dirty(value);
-            debugPrint("_onPostImagePickerEvent cover: $cover");
             emit(
               state.copyWith(
                 cover: cover.isValid ? cover : PostCover.pure(value),
@@ -89,9 +87,8 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
         });
       }
     } catch (e) {
-      debugPrint("_onPostImagePickerEvent error: $e");
-      // emit(state.copyWith(
-      //     status: AddPostStatus.failure, toastMessage: e.toString()));
+      emit(state.copyWith(
+          status: AddPostStatus.failure, toastMessage: e.toString()));
     }
   }
 

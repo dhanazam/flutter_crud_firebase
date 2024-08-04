@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/new_post/new_post.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
+import 'package:go_router/go_router.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -114,7 +114,15 @@ class _NewPostViewState extends State<NewPostView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewPostBloc, NewPostState>(
+    return BlocConsumer<NewPostBloc, NewPostState>(
+      listener: (context, state) {
+        if (state.status.isFailure) {
+          kSnackBarError(context, state.toastMessage);
+        } else if (state.status.isSuccess) {
+          kSnackBarSuccess(context, state.toastMessage);
+          context.pop();
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(title: const Text('Post')),
