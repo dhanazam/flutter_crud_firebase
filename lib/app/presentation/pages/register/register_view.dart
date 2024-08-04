@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/register/register.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
-import 'package:flutter_crud_firebase/app/router/router.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

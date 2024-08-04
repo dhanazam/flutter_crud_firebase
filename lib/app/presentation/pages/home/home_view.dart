@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:post_repository/post_repository.dart';
 
 typedef ContextCallback = void Function(BuildContext context);
 typedef ContextStateIndexCallback = void Function(

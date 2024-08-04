@@ -1,4 +1,3 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/bloc/app_bloc.dart';
@@ -95,6 +94,7 @@ abstract class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: splashPath,
         pageBuilder: (context, state) {
           return getPage(
@@ -117,19 +117,18 @@ abstract class AppRouter {
     ],
     redirect: (context, state) async {
       final status = context.read<AppBloc>().state.status;
-      debugPrint('status navigation: $status');
       if (status == AppStatus.authenticated) {
-        return null;
+        return homePath;
       } else if (status == AppStatus.unauthenticated) {
         return loginPath;
       }
+      return null;
     },
   );
 }
 
 class _BottomNavigationPage extends StatefulWidget {
   const _BottomNavigationPage({
-    super.key,
     required this.child,
   });
 

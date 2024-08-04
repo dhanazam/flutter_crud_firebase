@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/splash/splash.dart';
-import 'package:flutter_crud_firebase/app/router/router.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

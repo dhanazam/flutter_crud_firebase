@@ -9,7 +9,8 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final AuthenticationRepository _authRepository = AuthenticationRepository();
+  final AuthenticationRepository _authenticationRepository =
+      AuthenticationRepository();
   final PostRepository _postRepository = PostRepository();
   List<Post> list = <Post>[];
 
