@@ -6,6 +6,7 @@ import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:post_repository/post_repository.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 typedef ContextCallback = void Function(BuildContext context);
@@ -70,7 +71,20 @@ class HomeView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/home/add-new-post');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewPostScreen(
+                action: 'create',
+                postModel: Post(),
+              ),
+            ),
+          ).then((res) {
+            debugPrint(res.toString());
+            if (res == true) {
+              context.read<HomeBloc>().add(HomeInitialEvent());
+            }
+          });
         },
         child: const Icon(
           Icons.add,

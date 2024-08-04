@@ -120,7 +120,7 @@ class _NewPostViewState extends State<NewPostView> {
           kSnackBarError(context, state.toastMessage);
         } else if (state.status.isSuccess) {
           kSnackBarSuccess(context, state.toastMessage);
-          context.pop();
+          context.pop(true);
         }
       },
       builder: (context, state) {
