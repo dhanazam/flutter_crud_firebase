@@ -2,15 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:post_repository/post_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final AuthenticationRepository _authenticationRepository =
-      AuthenticationRepository();
   final PostRepository _postRepository = PostRepository();
   List<Post> list = <Post>[];
 
@@ -96,6 +93,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         state.copyWith(
           status: HomeStatus.success,
           list: [...list],
+          toastMessage: "Post deleted",
         ),
       );
     } catch (e) {

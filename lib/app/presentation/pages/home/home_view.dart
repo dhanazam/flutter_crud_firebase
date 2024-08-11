@@ -34,7 +34,7 @@ class HomeView extends StatelessWidget {
 
   void confirmDeleteOnPressed(
       BuildContext context, HomeState state, int index) {
-    // Navigator.pop(context);
+    Navigator.pop(context);
     context.read<HomeBloc>().add(
           HomeDeletePostEvent(
             postModel: state.list[index],
@@ -92,15 +92,7 @@ class HomeView extends StatelessWidget {
       ),
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
-          if (state.status == HomeStatus.unAuthorized) {
-            kSnackBarError(context, state.toastMessage);
-            // Navigator.of(context).pushNamedAndRemoveUntil(
-            //     AppRouter.loginRoute, (route) => false);
-          } else if (state.status == HomeStatus.logout) {
-            kSnackBarSuccess(context, state.toastMessage);
-            // Navigator.of(context).pushNamedAndRemoveUntil(
-            //     AppRouter.loginRoute, (route) => false);
-          }
+          kSnackBarError(context, state.toastMessage);
         },
         builder: (context, state) {
           if (state.status.isLoading) {
@@ -212,8 +204,8 @@ class HomeView extends StatelessWidget {
                                     onPressed: () {
                                       showDialog(
                                         context: context,
-                                        builder: (_) => BlocProvider(
-                                          create: (_) => HomeBloc(),
+                                        builder: (_) => BlocProvider.value(
+                                          value: context.read<HomeBloc>(),
                                           child: AlertDialog(
                                             contentPadding:
                                                 const EdgeInsets.all(20),
