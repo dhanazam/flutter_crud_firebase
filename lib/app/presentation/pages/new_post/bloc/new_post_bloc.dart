@@ -55,7 +55,6 @@ class NewPostBloc extends Bloc<NewPostEvent, NewPostState> {
   Future<void> _onPostImagePickerEvent(
       OnPostImagePickerEvent event, Emitter<NewPostState> emit) async {
     try {
-      debugPrint("_onPostImagePickerEvent event: $event");
       final pickedFile = await ImagePicker().pickImage(
           source: event.kind == 'gallery'
               ? ImageSource.gallery

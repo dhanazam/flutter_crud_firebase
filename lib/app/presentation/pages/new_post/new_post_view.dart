@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_crud_firebase/app/presentation/pages/new_post/bloc/new_post_bloc.dart';
 import 'package:flutter_crud_firebase/app/presentation/pages/new_post/new_post.dart';
 import 'package:flutter_crud_firebase/app/presentation/styles/styles.dart';
 import 'package:go_router/go_router.dart';
@@ -49,6 +50,11 @@ class _NewPostViewState extends State<NewPostView> {
 
   @override
   void initState() {
+    context.read<NewPostBloc>().add(
+          NewPostInitialEvent(
+              action: widget.action, postModel: widget.postModel),
+        );
+
     _titleFocusNode.addListener(() {
       if (!_titleFocusNode.hasFocus) {
         context.read<NewPostBloc>().add(PostTitleUnfocused());

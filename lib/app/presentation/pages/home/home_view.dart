@@ -71,18 +71,14 @@ class HomeView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewPostScreen(
-                action: 'create',
-                postModel: Post(),
-              ),
-            ),
-          ).then((res) {
-            debugPrint(res.toString());
+          context.push('/home/add-new-post', extra: {
+            'action': 'create',
+            'postModel': Post(),
+          }).then((res) {
             if (res == true) {
-              context.read<HomeBloc>().add(HomeInitialEvent());
+              context.read<HomeBloc>().add(
+                    HomeInitialEvent(),
+                  );
             }
           });
         },
@@ -157,23 +153,19 @@ class HomeView extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      context
-                                          .go('/post/${state.list[index].id}');
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => NewPostScreen(
-                                      //       action: 'update',
-                                      //       postModel: state.list[index],
-                                      //     ),
-                                      //   ),
-                                      //   ).then((res) {
-                                      //     if (res == true) {
-                                      //       context.read<HomeBloc>().add(
-                                      //             HomeInitialEvent(),
-                                      //           );
-                                      //     }
-                                      //   });
+                                      context.push(
+                                        '/home/add-new-post',
+                                        extra: {
+                                          'action': 'update',
+                                          'postModel': state.list[index]
+                                        },
+                                      ).then((res) {
+                                        if (res == true) {
+                                          context.read<HomeBloc>().add(
+                                                HomeInitialEvent(),
+                                              );
+                                        }
+                                      });
                                     },
                                     icon: Icon(
                                       Icons.mode_edit_outline_outlined,
