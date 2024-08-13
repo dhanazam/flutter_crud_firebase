@@ -88,7 +88,13 @@ class HomeView extends StatelessWidget {
       ),
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
-          kSnackBarError(context, state.toastMessage);
+          if (state.status.isSuccess) {
+            kSnackBarSuccess(context, state.toastMessage);
+          } else if (state.status.isFailure) {
+            kSnackBarError(context, state.toastMessage);
+          } else if (state.status.isLogout) {
+            context.go('/login');
+          }
         },
         builder: (context, state) {
           if (state.status.isLoading) {

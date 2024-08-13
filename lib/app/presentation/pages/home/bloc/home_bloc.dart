@@ -31,6 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             state.copyWith(
               status: HomeStatus.success,
               list: [...list],
+              toastMessage: "Post loaded",
             ),
           );
         } else {
