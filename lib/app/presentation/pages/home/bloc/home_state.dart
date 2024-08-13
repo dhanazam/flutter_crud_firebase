@@ -10,29 +10,33 @@ extension HomeStatusX on HomeStatus {
   bool get isSuccess => this == HomeStatus.success;
 }
 
-final class HomeState extends Equatable{
+final class HomeState extends Equatable {
   final HomeStatus status;
   final String toastMessage;
   final List<Post> list;
+  final Post? lastDeletedPost;
 
   const HomeState({
     this.status = HomeStatus.loading,
     this.toastMessage = '',
     this.list = const [],
+    this.lastDeletedPost,
   });
 
   HomeState copyWith({
     HomeStatus? status,
     String? toastMessage,
     List<Post>? list,
+    Post? lastDeletedPost,
   }) {
     return HomeState(
       status: status ?? this.status,
       toastMessage: toastMessage ?? this.toastMessage,
       list: list ?? this.list,
+      lastDeletedPost: lastDeletedPost ?? this.lastDeletedPost,
     );
   }
-  
+
   @override
-  List<Object?> get props => [status, toastMessage, list];
+  List<Object?> get props => [status, toastMessage, list, lastDeletedPost];
 }

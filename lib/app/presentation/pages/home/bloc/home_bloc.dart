@@ -15,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>(_onHomeInitialEvent);
     on<HomeUpdateStatusPostEvent>(_onHomeUpdateStatusPostEvent);
     on<HomeDeletePostEvent>(_onHomeDeletePostEvent);
+    on<HomePostUndoDeleteEvent>(_onHomePostUndoDeleteEvent);
   }
 
   FutureOr<void> _onHomeInitialEvent(
@@ -95,6 +96,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           status: HomeStatus.success,
           list: [...list],
           toastMessage: "Post deleted",
+          lastDeletedPost: event.postModel,
         ),
       );
     } catch (e) {
@@ -105,5 +107,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     }
+  }
+
+  Future<void> _onHomePostUndoDeleteEvent(
+    HomePostUndoDeleteEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final post = state.lastDeletedPost;
+    emit(
+      state.copyWith(
+          status: HomeStatus.success,
+          list: [...list, post!],
+          lastDeletedPost: null),
+    );
+
+    await _postRepository.addPost(post as Map<String, Object?>);
   }
 }

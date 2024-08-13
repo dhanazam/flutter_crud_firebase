@@ -16,3 +16,5 @@ final class HomeDeletePostEvent extends HomeEvent {
 
   HomeDeletePostEvent({required this.postModel});
 }
+
+final class HomePostUndoDeleteEvent extends HomeEvent {}

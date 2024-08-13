@@ -29,7 +29,7 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   void goBackNavigation(BuildContext context) {
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   void confirmDeleteOnPressed(
@@ -86,180 +86,209 @@ class HomeView extends StatelessWidget {
           Icons.add,
         ),
       ),
-      body: BlocConsumer<HomeBloc, HomeState>(
-        listener: (context, state) {
-          if (state.status.isSuccess) {
-            kSnackBarSuccess(context, state.toastMessage);
-          } else if (state.status.isFailure) {
-            kSnackBarError(context, state.toastMessage);
-          } else if (state.status.isLogout) {
-            context.go('/login');
-          }
-        },
-        builder: (context, state) {
-          if (state.status.isLoading) {
-            return Skeletonizer(
-              child: Text(AppLocalizations.of(context)!.noPostMessage),
-            );
-          }
-          if (state.status.isSuccess) {
-            return state.list.isEmpty
-                ? Center(
-                    child: Text(AppLocalizations.of(context)!.noPostMessage),
-                  )
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.all(ThemeProvider.scaffoldPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: List.generate(
-                          state.list.length,
-                          (index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: ListTile(
-                              titleTextStyle: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.fontSize,
-                                fontFamily: 'medium',
-                                color: Theme.of(context).canvasColor,
-                                decoration: state.list[index].isCompleted!
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                              ),
-                              title: Text('${state.list[index].title}'),
-                              leading: ClipRRect(
-                                child: SizedBox.fromSize(
-                                  size: const Size.fromRadius(15),
-                                  child: FadeInImage(
-                                    height: 20,
-                                    width: 20,
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        '${state.list[index].cover}'),
-                                    placeholder: const AssetImage(
-                                        "assets/images/placeholder.jpeg"),
-                                    imageErrorBuilder:
-                                        (context, error, stackTrace) {
-                                      return Image.asset(
-                                        'assets/images/placeholder.jpeg',
-                                        fit: BoxFit.cover,
-                                        height: 100,
-                                        width: 100,
-                                      );
-                                    },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<HomeBloc, HomeState>(
+            listener: (context, state) {
+              if (state.status.isSuccess) {
+                // kSnackBarSuccess(context, state.toastMessage);
+              } else if (state.status.isFailure) {
+                kSnackBarError(context, state.toastMessage);
+              } else if (state.status.isLogout) {
+                context.go('/login');
+              }
+            },
+          ),
+          BlocListener<HomeBloc, HomeState>(
+            listenWhen: (previous, current) {
+              return previous.lastDeletedPost != current.lastDeletedPost &&
+                  current.lastDeletedPost != null;
+            },
+            listener: (context, state) {
+              final messenger = ScaffoldMessenger.of(context);
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: const Text("Deletedddd"),
+                  action: SnackBarAction(
+                    label: "Undo",
+                    onPressed: () {
+                      context.read<HomeBloc>().add(
+                            HomePostUndoDeleteEvent(),
+                          );
+                    },
+                  ),
+                ));
+            },
+          )
+        ],
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state.status.isLoading) {
+              return Skeletonizer(
+                child: Text(AppLocalizations.of(context)!.noPostMessage),
+              );
+            }
+            if (state.status.isSuccess) {
+              return state.list.isEmpty
+                  ? Center(
+                      child: Text(AppLocalizations.of(context)!.noPostMessage),
+                    )
+                  : SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.all(ThemeProvider.scaffoldPadding),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: List.generate(
+                            state.list.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: ListTile(
+                                titleTextStyle: TextStyle(
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.fontSize,
+                                  fontFamily: 'medium',
+                                  color: Theme.of(context).canvasColor,
+                                  decoration: state.list[index].isCompleted!
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
+                                title: Text('${state.list[index].title}'),
+                                leading: ClipRRect(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(15),
+                                    child: FadeInImage(
+                                      height: 20,
+                                      width: 20,
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          '${state.list[index].cover}'),
+                                      placeholder: const AssetImage(
+                                          "assets/images/placeholder.jpeg"),
+                                      imageErrorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'assets/images/placeholder.jpeg',
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 100,
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              trailing: Wrap(
-                                spacing: -10,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      context.push(
-                                        '/home/add-new-post',
-                                        extra: {
-                                          'action': 'update',
-                                          'postModel': state.list[index]
-                                        },
-                                      ).then((res) {
-                                        if (res == true) {
-                                          context.read<HomeBloc>().add(
-                                                HomeInitialEvent(),
-                                              );
-                                        }
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.mode_edit_outline_outlined,
-                                      color: Theme.of(context).canvasColor,
+                                trailing: Wrap(
+                                  spacing: -10,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        context.push(
+                                          '/home/add-new-post',
+                                          extra: {
+                                            'action': 'update',
+                                            'postModel': state.list[index]
+                                          },
+                                        ).then((res) {
+                                          if (res == true) {
+                                            context.read<HomeBloc>().add(
+                                                  HomeInitialEvent(),
+                                                );
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.mode_edit_outline_outlined,
+                                        color: Theme.of(context).canvasColor,
+                                      ),
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      context.read<HomeBloc>().add(
-                                            HomeUpdateStatusPostEvent(
-                                              index: index,
-                                              postModel: state.list[index],
-                                            ),
-                                          );
-                                    },
-                                    icon: FaIcon(
-                                      state.list[index].status == 1
-                                          ? FontAwesomeIcons.eye
-                                          : FontAwesomeIcons.eyeSlash,
-                                      size: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.fontSize,
-                                      color: Theme.of(context).canvasColor,
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<HomeBloc>().add(
+                                              HomeUpdateStatusPostEvent(
+                                                index: index,
+                                                postModel: state.list[index],
+                                              ),
+                                            );
+                                      },
+                                      icon: FaIcon(
+                                        state.list[index].status == 1
+                                            ? FontAwesomeIcons.eye
+                                            : FontAwesomeIcons.eyeSlash,
+                                        size: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.fontSize,
+                                        color: Theme.of(context).canvasColor,
+                                      ),
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) => BlocProvider.value(
-                                          value: context.read<HomeBloc>(),
-                                          child: AlertDialog(
-                                            contentPadding:
-                                                const EdgeInsets.all(20),
-                                            content: SingleChildScrollView(
-                                              child: Column(
-                                                children: [
-                                                  const _DeleteImage(),
-                                                  const SizedBox(height: 20),
-                                                  _ConfirmText(
-                                                      context: context),
-                                                  const SizedBox(height: 10),
-                                                  _DeleteTextInfo(
-                                                      context: context,
-                                                      state: state,
-                                                      index: index),
-                                                  const SizedBox(height: 20),
-                                                  Row(
-                                                    children: [
-                                                      _CancelButton(
-                                                        context: context,
-                                                        onPressed:
-                                                            goBackNavigation,
-                                                      ),
-                                                      const SizedBox(width: 20),
-                                                      _ConfirmDeleteButton(
-                                                        onPressed:
-                                                            confirmDeleteOnPressed,
+                                    IconButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => BlocProvider.value(
+                                            value: context.read<HomeBloc>(),
+                                            child: AlertDialog(
+                                              contentPadding:
+                                                  const EdgeInsets.all(20),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    const _DeleteImage(),
+                                                    const SizedBox(height: 20),
+                                                    _ConfirmText(
+                                                        context: context),
+                                                    const SizedBox(height: 10),
+                                                    _DeleteTextInfo(
                                                         context: context,
                                                         state: state,
-                                                        index: index,
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
+                                                        index: index),
+                                                    const SizedBox(height: 20),
+                                                    Row(
+                                                      children: [
+                                                        _CancelButton(
+                                                          context: context,
+                                                          onPressed:
+                                                              goBackNavigation,
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 20),
+                                                        _ConfirmDeleteButton(
+                                                          onPressed:
+                                                              confirmDeleteOnPressed,
+                                                          context: context,
+                                                          state: state,
+                                                          index: index,
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.delete_outline_outlined,
-                                      color: Theme.of(context).canvasColor,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.delete_outline_outlined,
+                                        color: Theme.of(context).canvasColor,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-          }
-          return const SizedBox();
-        },
+                    );
+            }
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
