@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class Posts extends Equatable {
+class Post extends Equatable {
   String? id;
   String? userId;
   String? title;
   String? description;
   String? cover;
-  bool? isCompleted;
+  bool isCompleted;
   int? status;
   Timestamp? timestamp;
 
-  Posts({
+  Post({
     this.id,
     this.userId,
     this.title,
     this.description,
     this.cover,
-    this.isCompleted,
+    this.isCompleted = false,
     this.status,
     this.timestamp,
   });
@@ -34,7 +34,7 @@ class Posts extends Equatable {
     };
   }
 
-  Posts.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
+  Post.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
       : id = doc.id,
         userId = doc.data()!['userId'],
         title = doc.data()!['title'],
@@ -44,7 +44,7 @@ class Posts extends Equatable {
         status = doc.data()!['status'],
         timestamp = doc.data()!['timestamp'];
 
-  Posts copyWith({
+  Post copyWith({
     String? id,
     String? userId,
     String? title,
@@ -54,7 +54,7 @@ class Posts extends Equatable {
     int? status,
     Timestamp? timestamp,
   }) {
-    return Posts(
+    return Post(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       title: title ?? this.title,

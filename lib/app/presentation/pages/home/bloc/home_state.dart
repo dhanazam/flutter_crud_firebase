@@ -13,8 +13,8 @@ extension HomeStatusX on HomeStatus {
 final class HomeState extends Equatable {
   final HomeStatus status;
   final String toastMessage;
-  final List<Posts> list;
-  final Posts? lastDeletedPost;
+  final List<Post> list;
+  final Post? lastDeletedPost;
 
   const HomeState({
     this.status = HomeStatus.loading,
@@ -23,11 +23,13 @@ final class HomeState extends Equatable {
     this.lastDeletedPost,
   });
 
+  // Iterable<Post>
+
   HomeState copyWith({
     HomeStatus? status,
     String? toastMessage,
-    List<Posts>? list,
-    Posts? lastDeletedPost,
+    List<Post>? list,
+    Post? lastDeletedPost,
   }) {
     return HomeState(
       status: status ?? this.status,

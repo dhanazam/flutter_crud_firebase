@@ -20,11 +20,11 @@ class PostRepository {
     await _db.collection("posts").doc(documentId).delete();
   }
 
-  Future<List<Posts>> retrieveMyPost(String uid) async {
+  Future<List<Post>> retrieveMyPost(String uid) async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await _db.collection("posts").where("userId", isEqualTo: uid).get();
     return snapshot.docs
-        .map((docSnapshot) => Posts.fromDocumentSnapshot(docSnapshot))
+        .map((docSnapshot) => Post.fromDocumentSnapshot(docSnapshot))
         .toList();
   }
 

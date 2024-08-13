@@ -73,7 +73,7 @@ class HomeView extends StatelessWidget {
         onPressed: () {
           context.push('/home/add-new-post', extra: {
             'action': 'create',
-            'postModel': Posts(),
+            'postModel': Post(),
           }).then((res) {
             if (res == true) {
               context.read<HomeBloc>().add(
