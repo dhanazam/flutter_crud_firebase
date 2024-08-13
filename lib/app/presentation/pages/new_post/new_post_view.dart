@@ -9,7 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewPostScreen extends StatefulWidget {
   final String action;
-  final Post postModel;
+  final Posts postModel;
 
   const NewPostScreen(
       {super.key, required this.action, required this.postModel});
@@ -33,7 +33,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
 class NewPostView extends StatefulWidget {
   final String action;
-  final Post postModel;
+  final Posts postModel;
   const NewPostView({super.key, required this.action, required this.postModel});
 
   @override

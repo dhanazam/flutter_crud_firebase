@@ -56,7 +56,7 @@ abstract class AppRouter {
                     pageBuilder: (context, state) {
                       final extras = state.extra as Map<String, dynamic>;
                       final String action = extras['action'] as String;
-                      final Post postModel = extras['postModel'] as Post;
+                      final Posts postModel = extras['postModel'] as Posts;
                       return getPage(
                         child:
                             NewPostScreen(action: action, postModel: postModel),

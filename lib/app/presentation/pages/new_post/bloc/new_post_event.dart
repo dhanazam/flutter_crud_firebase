@@ -4,7 +4,7 @@ sealed class NewPostEvent {}
 
 final class NewPostInitialEvent extends NewPostEvent {
   final String action;
-  final Post postModel;
+  final Posts postModel;
 
   NewPostInitialEvent({required this.action, required this.postModel});
 }
@@ -39,7 +39,7 @@ final class PostDescriptionUnfocused extends NewPostEvent {}
 
 final class PostFormSubmitted extends NewPostEvent {
   final String action;
-  final Post postModel;
+  final Posts postModel;
 
   PostFormSubmitted({required this.action, required this.postModel});
 }
