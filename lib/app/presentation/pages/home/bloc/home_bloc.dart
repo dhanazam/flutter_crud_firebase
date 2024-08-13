@@ -9,7 +9,7 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final PostRepository _postRepository = PostRepository();
-  List<Post> list = <Post>[];
+  List<Posts> list = <Posts>[];
 
   HomeBloc() : super(const HomeState()) {
     on<HomeInitialEvent>(_onHomeInitialEvent);

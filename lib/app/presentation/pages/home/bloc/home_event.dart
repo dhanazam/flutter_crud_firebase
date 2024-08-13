@@ -6,13 +6,13 @@ class HomeInitialEvent extends HomeEvent {}
 
 final class HomeUpdateStatusPostEvent extends HomeEvent {
   final int index;
-  final Post postModel;
+  final Posts postModel;
 
   HomeUpdateStatusPostEvent({required this.index, required this.postModel});
 }
 
 final class HomeDeletePostEvent extends HomeEvent {
-  final Post postModel;
+  final Posts postModel;
 
   HomeDeletePostEvent({required this.postModel});
 }
