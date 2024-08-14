@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:post_repository/post_repository.dart';
+
+import '../models/PostsFilter.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -16,6 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeUpdateStatusPostEvent>(_onHomeUpdateStatusPostEvent);
     on<HomeDeletePostEvent>(_onHomeDeletePostEvent);
     on<HomePostUndoDeleteEvent>(_onHomePostUndoDeleteEvent);
+    on<HomePostsFilterEvent>(_onHomePostsFilterEvent);
   }
 
   FutureOr<void> _onHomeInitialEvent(
@@ -33,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               status: HomeStatus.success,
               list: [...list],
               toastMessage: "Post loaded",
+              filter: PostsFilter.all,
             ),
           );
         } else {
@@ -122,5 +127,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
 
     await _postRepository.addPost(post as Map<String, Object?>);
+  }
+
+  void _onHomePostsFilterEvent(
+    HomePostsFilterEvent event,
+    Emitter<HomeState> emit,
+  ) {
+    debugPrint("Filter: ${event.filter}");
+    emit(
+      state.copyWith(
+        filter: event.filter,
+      ),
+    );
   }
 }

@@ -5,10 +5,9 @@ sealed class HomeEvent {}
 class HomeInitialEvent extends HomeEvent {}
 
 final class HomeUpdateStatusPostEvent extends HomeEvent {
-  final int index;
   final Post postModel;
 
-  HomeUpdateStatusPostEvent({required this.index, required this.postModel});
+  HomeUpdateStatusPostEvent({required this.postModel});
 }
 
 final class HomeDeletePostEvent extends HomeEvent {
@@ -18,3 +17,9 @@ final class HomeDeletePostEvent extends HomeEvent {
 }
 
 final class HomePostUndoDeleteEvent extends HomeEvent {}
+
+final class HomePostsFilterEvent extends HomeEvent {
+  final PostsFilter filter;
+
+  HomePostsFilterEvent({required this.filter});
+}

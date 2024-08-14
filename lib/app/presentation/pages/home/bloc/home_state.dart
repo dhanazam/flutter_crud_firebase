@@ -15,30 +15,35 @@ final class HomeState extends Equatable {
   final String toastMessage;
   final List<Post> list;
   final Post? lastDeletedPost;
+  final PostsFilter filter;
 
   const HomeState({
     this.status = HomeStatus.loading,
     this.toastMessage = '',
     this.list = const [],
     this.lastDeletedPost,
+    this.filter = PostsFilter.all,
   });
 
-  // Iterable<Post>
+  Iterable<Post> get filteredPosts => filter.applyAll(list);
 
   HomeState copyWith({
     HomeStatus? status,
     String? toastMessage,
     List<Post>? list,
     Post? lastDeletedPost,
+    PostsFilter? filter,
   }) {
     return HomeState(
       status: status ?? this.status,
       toastMessage: toastMessage ?? this.toastMessage,
       list: list ?? this.list,
       lastDeletedPost: lastDeletedPost ?? this.lastDeletedPost,
+      filter: filter ?? this.filter,
     );
   }
 
   @override
-  List<Object?> get props => [status, toastMessage, list, lastDeletedPost];
+  List<Object?> get props =>
+      [status, toastMessage, list, lastDeletedPost, filter];
 }

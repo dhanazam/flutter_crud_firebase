@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crud_firebase/app/bloc/app_bloc.dart';
@@ -11,7 +12,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 typedef ContextCallback = void Function(BuildContext context);
 typedef ContextStateIndexCallback = void Function(
-    BuildContext context, HomeState state, int index);
+    BuildContext context, Post post);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,12 +33,11 @@ class HomeView extends StatelessWidget {
     Navigator.pop(context);
   }
 
-  void confirmDeleteOnPressed(
-      BuildContext context, HomeState state, int index) {
+  void confirmDeleteOnPressed(BuildContext context, Post post) {
     Navigator.pop(context);
     context.read<HomeBloc>().add(
           HomeDeletePostEvent(
-            postModel: state.list[index],
+            postModel: post,
           ),
         );
   }
@@ -49,15 +49,16 @@ class HomeView extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.homeTitle),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AppBloc>().add(const AppLogoutRequested());
-            },
-            icon: Icon(
-              Icons.logout_outlined,
-              color: Theme.of(context).iconTheme.color,
-            ),
-          )
+          const HomeFilterButton(),
+          // IconButton(
+          //   onPressed: () {
+          //     context.read<AppBloc>().add(const AppLogoutRequested());
+          //   },
+          //   icon: Icon(
+          //     Icons.logout_outlined,
+          //     color: Theme.of(context).iconTheme.color,
+          //   ),
+          // )
         ],
         leading: IconButton(
           onPressed: () {
@@ -130,20 +131,19 @@ class HomeView extends StatelessWidget {
               );
             }
             if (state.status.isSuccess) {
+              debugPrint("filteredPosts: ${state.filteredPosts}");
+              debugPrint("filteredPosts length: ${state.filteredPosts.length}");
               return state.list.isEmpty
                   ? Center(
                       child: Text(AppLocalizations.of(context)!.noPostMessage),
                     )
-                  : SingleChildScrollView(
-                      child: Padding(
+                  : CupertinoScrollbar(
+                      child: ListView(
                         padding:
                             const EdgeInsets.all(ThemeProvider.scaffoldPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: List.generate(
-                            state.list.length,
-                            (index) => Padding(
+                        children: [
+                          for (final post in state.filteredPosts)
+                            Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: ListTile(
                                 titleTextStyle: TextStyle(
@@ -153,11 +153,11 @@ class HomeView extends StatelessWidget {
                                       ?.fontSize,
                                   fontFamily: 'medium',
                                   color: Theme.of(context).canvasColor,
-                                  decoration: state.list[index].isCompleted!
+                                  decoration: post.isCompleted!
                                       ? TextDecoration.lineThrough
                                       : null,
                                 ),
-                                title: Text('${state.list[index].title}'),
+                                title: Text(post.title ?? ''),
                                 leading: ClipRRect(
                                   child: SizedBox.fromSize(
                                     size: const Size.fromRadius(15),
@@ -165,8 +165,7 @@ class HomeView extends StatelessWidget {
                                       height: 20,
                                       width: 20,
                                       fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          '${state.list[index].cover}'),
+                                      image: NetworkImage(post.cover ?? ''),
                                       placeholder: const AssetImage(
                                           "assets/images/placeholder.jpeg"),
                                       imageErrorBuilder:
@@ -190,13 +189,13 @@ class HomeView extends StatelessWidget {
                                           '/home/add-new-post',
                                           extra: {
                                             'action': 'update',
-                                            'postModel': state.list[index]
+                                            'postModel': post,
                                           },
                                         ).then((res) {
                                           if (res == true) {
-                                            context.read<HomeBloc>().add(
-                                                  HomeInitialEvent(),
-                                                );
+                                            context
+                                                .read<HomeBloc>()
+                                                .add(HomeInitialEvent());
                                           }
                                         });
                                       },
@@ -209,13 +208,12 @@ class HomeView extends StatelessWidget {
                                       onPressed: () {
                                         context.read<HomeBloc>().add(
                                               HomeUpdateStatusPostEvent(
-                                                index: index,
-                                                postModel: state.list[index],
+                                                postModel: post,
                                               ),
                                             );
                                       },
                                       icon: FaIcon(
-                                        state.list[index].status == 1
+                                        post.status == 1
                                             ? FontAwesomeIcons.eye
                                             : FontAwesomeIcons.eyeSlash,
                                         size: Theme.of(context)
@@ -244,8 +242,7 @@ class HomeView extends StatelessWidget {
                                                     const SizedBox(height: 10),
                                                     _DeleteTextInfo(
                                                         context: context,
-                                                        state: state,
-                                                        index: index),
+                                                        post: post),
                                                     const SizedBox(height: 20),
                                                     Row(
                                                       children: [
@@ -257,14 +254,12 @@ class HomeView extends StatelessWidget {
                                                         const SizedBox(
                                                             width: 20),
                                                         _ConfirmDeleteButton(
-                                                          onPressed:
-                                                              confirmDeleteOnPressed,
-                                                          context: context,
-                                                          state: state,
-                                                          index: index,
-                                                        ),
+                                                            onPressed:
+                                                                confirmDeleteOnPressed,
+                                                            context: context,
+                                                            post: post),
                                                       ],
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -281,8 +276,7 @@ class HomeView extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                        ],
                       ),
                     );
             }
@@ -325,16 +319,14 @@ class _ConfirmText extends StatelessWidget {
 }
 
 class _DeleteTextInfo extends StatelessWidget {
-  const _DeleteTextInfo(
-      {required this.context, required this.state, required this.index});
+  const _DeleteTextInfo({required this.context, required this.post});
   final BuildContext context;
-  final HomeState state;
-  final int index;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
     final String textInfo =
-        '${AppLocalizations.of(context)!.toDelete} ${state.list[index].title!} ${AppLocalizations.of(context)!.confirmPost}';
+        '${AppLocalizations.of(context)!.toDelete} ${post.title} ${AppLocalizations.of(context)!.confirmPost}';
     return Text(
       textInfo,
       style: TextStyle(
@@ -377,21 +369,17 @@ class _CancelButton extends StatelessWidget {
 
 class _ConfirmDeleteButton extends StatelessWidget {
   const _ConfirmDeleteButton(
-      {required this.onPressed,
-      required this.context,
-      required this.state,
-      required this.index});
+      {required this.onPressed, required this.context, required this.post});
 
   final BuildContext context;
-  final HomeState state;
-  final int index;
+  final Post post;
   final ContextStateIndexCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () => onPressed(context, state, index),
+        onPressed: () => onPressed(context, post),
         style: ElevatedButton.styleFrom(
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           backgroundColor: Theme.of(context).primaryColor,
