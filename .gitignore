@@ -44,3 +44,13 @@ app.*.map.json
 
 # env
 .env
+
+# Ignore Firebase configuration files
+firebase.json
+.firebaserc
+
+# Ignore Firebase files in Android
+android/app/google-services.json
+
+# Ignore Firebase files in iOS
+ios/Runner/GoogleService-Info.plist
