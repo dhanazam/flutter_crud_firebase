@@ -47,7 +47,6 @@ app.*.map.json
 
 # Ignore Firebase configuration files
 firebase.json
-.firebaserc
 
 # Ignore Firebase files in Android
 android/app/google-services.json
